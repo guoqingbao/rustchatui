@@ -1,5 +1,5 @@
-use rustchatui::start_ui_server;
 use anyhow::Result;
+use rustchatui::start_ui_server;
 
 #[tokio::main]
 async fn main() -> Result<()> {
