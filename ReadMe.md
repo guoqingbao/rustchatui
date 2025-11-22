@@ -73,7 +73,7 @@ Add to your main server’s `Cargo.toml`:
 
 ```toml
 [dependencies]
-rustchatui = { git = "https://github.com/guoqingbao/rustchatui.git", version="0.1.3" }
+rustchatui = { git = "https://github.com/guoqingbao/rustchatui.git", version="0.1.4" }
 ```
 
 Then call it conditionally:
@@ -87,7 +87,7 @@ async fn main() -> anyhow::Result<()> {
     // Main server...
     let chat_ui_server = task::spawn(async {
         // Port 3000 -> http://localhost:3000
-        start_ui_server(3000, "dist").await.unwrap();
+        start_ui_server(3000).await.unwrap();
     });
 
     // Wait for servers to run
@@ -112,7 +112,7 @@ Running multiple tasks along with Chat UI Server
         if args.ui_server {
             tasks.push(tokio::spawn(async move {
                 // Use this crate with another port
-                start_ui_server((args.port + 1) as u16, "dist")
+                start_ui_server((args.port + 1) as u16)
                     .await
                     .unwrap();
             }));

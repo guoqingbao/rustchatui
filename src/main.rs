@@ -9,5 +9,5 @@ async fn main() -> Result<()> {
         .and_then(|p| p.parse().ok())
         .unwrap_or(3000);
 
-    start_ui_server(port, "dist").await
+    start_ui_server(port).await
 }
