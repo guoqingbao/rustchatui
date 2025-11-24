@@ -1,8 +1,9 @@
 use anyhow::Result;
 use axum::{Router, response::IntoResponse};
 use include_dir::{Dir, include_dir};
+use inquire::Select;
+use local_ip_address::local_ip;
 use tower_http::cors::{Any, CorsLayer};
-
 static DIST_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/dist");
 
 #[derive(serde::Serialize)]
@@ -10,6 +11,29 @@ static DIST_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/dist");
 struct AppConfig {
     serverUrl: String,
     apiKey: String,
+}
+
+pub fn choose_url(port: u16) -> (String, bool) {
+    let ip = local_ip().unwrap_or("127.0.0.1".parse().unwrap());
+
+    let local_url = format!("http://localhost:{port}/v1/");
+    let lan_url = format!("http://{ip}:{port}/v1/");
+
+    let options = vec![
+        format!("Local Access → {}", local_url),
+        format!("LAN Access   → {}", lan_url),
+    ];
+
+    let ans = Select::new("Choose how the UI connects to the API:", options)
+        .with_help_message("Use ↑ / ↓ to navigate, press Enter to confirm.")
+        .prompt()
+        .unwrap();
+
+    if ans.contains("LAN Access") {
+        (lan_url, false)
+    } else {
+        (local_url, true)
+    }
 }
 
 pub async fn start_ui_server(
@@ -24,10 +48,10 @@ pub async fn start_ui_server(
         .allow_methods(Any)
         .allow_headers(Any);
 
-    let api_url = if api_port.is_some() {
-        format!("http://localhost:{}/v1/", api_port.unwrap())
+    let (api_url, is_local) = if api_port.is_some() {
+        choose_url(api_port.unwrap())
     } else {
-        server_url.unwrap()
+        (server_url.unwrap(), false)
     };
 
     let api_key = if api_key.is_some() {
@@ -51,7 +75,15 @@ pub async fn start_ui_server(
         .layer(cors);
 
     let addr = format!("0.0.0.0:{ui_port}");
-    println!("🖥️ Rust Chat UI server running at http://localhost:{ui_port}");
+
+    if is_local {
+        println!(
+            "🖥️ Rust Chat UI server running at: http://localhost:{ui_port} (Local Access Only)"
+        );
+    } else {
+        let ip = local_ip().unwrap_or_else(|_| "127.0.0.1".parse().unwrap());
+        println!("🖥️ Rust Chat UI server running at: http://{ip}:{ui_port} (Remote Access)");
+    }
 
     let listener = tokio::net::TcpListener::bind(&addr).await?;
     axum::serve(listener, app).await?;
