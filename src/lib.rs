@@ -20,14 +20,17 @@ pub fn choose_url(port: u16) -> (String, bool) {
     let lan_url = format!("http://{ip}:{port}/v1/");
 
     let options = vec![
-        format!("Local Access → {}", local_url),
-        format!("LAN Access   → {}", lan_url),
+        format!("LAN Access this API server   → {}", lan_url),
+        format!("Local Access this API server → {}", local_url),
     ];
 
-    let ans = Select::new("Choose how the UI connects to the API:", options)
-        .with_help_message("Use ↑ / ↓ to navigate, press Enter to confirm.")
-        .prompt()
-        .unwrap();
+    let ans = Select::new(
+        "Choose how the Chat UI connects to the API server:",
+        options,
+    )
+    .with_help_message("Use ↑ / ↓ to navigate, press Enter to confirm.")
+    .prompt()
+    .unwrap();
 
     if ans.contains("LAN Access") {
         (lan_url, false)
@@ -78,11 +81,13 @@ pub async fn start_ui_server(
 
     if is_local {
         println!(
-            "🖥️ Rust Chat UI server running at: http://localhost:{ui_port} (Local Access Only)"
+            "\r\n 🖥️ Rust Chat UI server running at (click to open): http://localhost:{ui_port} (Local Access Only)"
         );
     } else {
         let ip = local_ip().unwrap_or_else(|_| "127.0.0.1".parse().unwrap());
-        println!("🖥️ Rust Chat UI server running at: http://{ip}:{ui_port} (Remote Access)");
+        println!(
+            "\r\n🖥️ Rust Chat UI server running at (click to open): http://{ip}:{ui_port} (Remote Access, Recommended)"
+        );
     }
 
     let listener = tokio::net::TcpListener::bind(&addr).await?;
