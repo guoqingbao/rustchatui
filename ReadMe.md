@@ -78,7 +78,7 @@ Add to your main server’s `Cargo.toml`:
 
 ```toml
 [dependencies]
-rustchatui = { git = "https://github.com/guoqingbao/rustchatui.git", version="0.1.14" }
+rustchatui = { git = "https://github.com/guoqingbao/rustchatui.git", version="0.1.15" }
 ```
 
 Then call it conditionally:
