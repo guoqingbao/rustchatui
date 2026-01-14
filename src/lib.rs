@@ -1,7 +1,7 @@
 use anyhow::Result;
-use axum::{Router, response::IntoResponse};
+use axum::{response::IntoResponse, Router};
 use colored::*;
-use include_dir::{Dir, include_dir};
+use include_dir::{include_dir, Dir};
 use inquire::Select;
 use local_ip_address::local_ip;
 use tower_http::cors::{Any, CorsLayer};
@@ -20,10 +20,10 @@ pub fn choose_url(port: u16) -> (String, bool) {
     let local_url = format!("http://localhost:{port}/v1/");
     let lan_url = format!("http://{ip}:{port}/v1/");
 
-    let options = vec![
-        format!("LAN Access this API server   → {}", lan_url),
-        format!("Local Access this API server → {}", local_url),
-    ];
+    let lan_option = format!("LAN Access this API server   → {}", lan_url);
+    let local_option = format!("Local Access this API server → {}", local_url);
+
+    let options = vec![lan_option.clone(), local_option];
 
     let ans = Select::new(
         "Choose how the Chat UI connects to the API server:",
@@ -31,7 +31,7 @@ pub fn choose_url(port: u16) -> (String, bool) {
     )
     .with_help_message("Use ↑ / ↓ to navigate, press Enter to confirm.")
     .prompt()
-    .unwrap();
+    .unwrap_or_else(|_| lan_option); // fallback to LAN if prompt fails (NotTTY)
 
     if ans.contains("LAN Access") {
         (lan_url, false)
