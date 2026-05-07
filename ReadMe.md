@@ -1,6 +1,6 @@
 # 📦 `Rust ChatGPT-like WebUI`
 
-A small Rust library + binary that serves a pre-built `ChatGPT-like` WebUI that can be integrated into `any` Rust projects.
+A small Rust library and binary for serving a pre-built `ChatGPT-like` WebUI in `any` Rust project.
 
 It can be used:
 

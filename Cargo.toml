@@ -2,6 +2,10 @@
 name = "rustchatui"
 version = "0.2.13"
 edition = "2021"
+description = "A small Rust library and binary for serving a pre-built ChatGPT-like WebUI in any Rust project."
+license = "MIT"
+readme = "ReadMe.md"
+keywords = ["ChatGPT", "WebUI", "LLM", "rust"]
 
 [lib]
 path = "src/lib.rs"
