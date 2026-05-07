@@ -1,29 +1,37 @@
-# 📦 `Rust Chat UI`
+# 📦 `Rust ChatGPT-like WebUI`
 
-A small Rust library + binary that serves a pre-built web UI (for example, a Vite/TypeScript `dist/` folder).
+A small Rust library + binary that serves a pre-built `ChatGPT-like` WebUI that can be integrated into `any` Rust projects.
 
 It can be used:
 
-* **as a library** inside another Rust server (spawned conditionally)
+* **as a library** inside another Rust project (spawned conditionally)
 * **as a standalone binary** (run directly from CLI)
 
-This crate is ideal if you want a reusable, embeddable UI server.
+This crate is ideal if you want a reusable, embeddable ChatGPT-like WebUI server in your Rust project.
 
-💡This crate is a Rust wrapper for the **release build** of `chatclient` (co-developed with Gemini): [https://github.com/guoqingbao/chatclient](https://github.com/guoqingbao/chatclient)
+💡This crate is a Rust wrapper for the **release build** of [`chatclient`](https://github.com/guoqingbao/chatclient), and is used by two Rust LLM Inference projects, i.e., [vLLM.rs](https://github.com/guoqingbao/vllm.rs) and [Candle-vLLM](https://github.com/EricLBuehler/candle-vllm)
 
 ---
 
-## ✨ Features
+## ✨🖥️ Features
 
-* Serves any static frontend from a `dist/` folder (Vite, React, Svelte, Solid, etc.)
-* Simple public API (`start_ui_server(port, path)`)
-* Run standalone via:
+- 🌞 **Light Mode**  
+- 🌙 **Dark Mode**  
+- ⚡ **Fluent Response**  
+- 🎞️ **Animations**  
+- 🧠 **Thinking Process** *(embedded)*  
+- 🗂️ **Chat History Storage**  
+- 📈 **Token Usage Indicator**
 
-  ```bash
-  cargo run --release --bin chatui --ui-port 8080 --api-port 8000
-  ```
-* Async, non-blocking Axum server
-* Works well alongside other Axum/Tokio servers
+- ⚙️ **Settings Panel**:
+  > 🔑 OpenAI API Compatible Server URL / Key  
+  > 🎛️ Sampling Parameters  
+  > 🗄️ Context Cache  
+  > 📝 Auto Title Generation
+
+---
+![Screenshot of the ChatUI](./screenshot.png)
+
 
 # ⚡ Install and use globally:
 
@@ -52,35 +60,14 @@ cargo run --release --bin chatui -- --ui-port 8080 --api-port 8000
 cargo run --release --bin chatui -- --ui-port 8080 --server-url http://api.openai.com/v1 --api-key xxxxx
 ```
 
----
 
-## ✨🖥️ Built-in ChatGPT-like UI Features
-
-- 🌞 **Light Mode**  
-- 🌙 **Dark Mode**  
-- ⚡ **Fluent Response**  
-- 🎞️ **Animations**  
-- 🧠 **Thinking Process** *(embedded)*  
-- 🗂️ **Chat History Storage**  
-- 📈 **Token Usage Indicator**
-
-- ⚙️ **Settings Panel**:
-  > 🔑 OpenAI API Compatible Server URL / Key  
-  > 🎛️ Sampling Parameters  
-  > 🗄️ Context Cache  
-  > 📝 Auto Title Generation
-
----
-![Screenshot of the ChatUI](./screenshot.png)
-
-
-# 📚 Usage as a Library (Embedded UI Server to your Rust program)
+# 📚 Usage as a Library (Embedded WebUI Server to your Rust program)
 
 Add to your main server’s `Cargo.toml`:
 
 ```toml
 [dependencies]
-rustchatui = { git = "https://github.com/guoqingbao/rustchatui.git", version="0.2.11" }
+rustchatui = { version="0.2.13" }
 ```
 
 Then call it conditionally:
